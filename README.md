@@ -1,5 +1,5 @@
 # 🎵 Music Management System (.NET 8.0 MVC & MySQL)
-Một ứng dụng quản lý âm nhạc hoàn chỉnh được xây dựng trên nền tảng **ASP.NET Core 8.0 MVC**, sử dụng **Entity Framework Core (Code-First)** kết nối cơ sở dữ liệu **MySQL**. [cite_start]Dự án tích hợp các công nghệ hiện đại bao gồm dịch vụ lưu trữ đám mây **Cloudinary** để quản lý hình ảnh, bộ soạn thảo văn bản giàu **CKEditor 5**, phân trang, tìm kiếm nâng cao và xử lý xóa mềm bằng **AJAX Fetch API**.
+Một ứng dụng quản lý âm nhạc hoàn chỉnh được xây dựng trên nền tảng **ASP.NET Core 8.0 MVC**, sử dụng **Entity Framework Core (Code-First)** kết nối cơ sở dữ liệu **MySQL**. Dự án tích hợp các công nghệ hiện đại bao gồm dịch vụ lưu trữ đám mây **Cloudinary** để quản lý hình ảnh, bộ soạn thảo văn bản giàu **CKEditor 5**, phân trang, tìm kiếm nâng cao và xử lý xóa mềm bằng **AJAX Fetch API**.
 
 ---
 
@@ -56,6 +56,8 @@ Mở file `appsettings.json` tại thư mục gốc và thay đổi thông số 
     "ApiSecret": "api_secret_của_bạn"
   }
 }
+
+```
 ### 3. Thực thi Khởi tạo Cơ sở dữ liệu
 Mở terminal tại thư mục gốc dự án và chạy chuỗi lệnh sau để EF Core quét cấu hình Code-First và sinh bảng vào MySQL:
 # Tạo bản thiết kế Migration ban đầu
