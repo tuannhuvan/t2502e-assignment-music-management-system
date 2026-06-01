@@ -132,3 +132,4 @@ C:\Users\techn\RiderProjects\Music_Management\Music_Management_System\obj\Debug\
 C:\Users\techn\RiderProjects\Music_Management\Music_Management_System\obj\Debug\net8.0\Music_Management_System.pdb
 C:\Users\techn\RiderProjects\Music_Management\Music_Management_System\obj\Debug\net8.0\Music_Management_System.genruntimeconfig.cache
 C:\Users\techn\RiderProjects\Music_Management\Music_Management_System\obj\Debug\net8.0\ref\Music_Management_System.dll
+C:\Users\techn\RiderProjects\Music_Management\Music_Management_System\obj\Debug\net8.0\Music_Management_System.sourcelink.json
