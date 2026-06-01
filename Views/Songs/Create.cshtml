@@ -1,0 +1,80 @@
+﻿@model Music_Management_System.ViewModels.SongCreateViewModel
+@{
+    ViewData["Title"] = "Thêm Bài Hát Mới";
+}
+
+<div class="container mt-4" style="max-width: 850px;">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0 fw-bold">➕ Thêm Mới Bài Hát</h4>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label fw-bold">Tiêu đề bài hát (*)</label>
+                    <input asp-for="Title" class="form-control" placeholder="Nhập tiêu đề (tối thiểu 5 ký tự)..." />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="SingerId" class="form-label fw-bold">Ca sĩ trình bày (*)</label>
+                        <select asp-for="SingerId" class="form-select" asp-items="ViewBag.SingerId">
+                            <option value="">-- Chọn ca sĩ --</option>
+                        </select>
+                        <span asp-validation-for="SingerId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ComposerId" class="form-label fw-bold">Nhạc sĩ sáng tác (*)</label>
+                        <select asp-for="ComposerId" class="form-select" asp-items="ViewBag.ComposerId">
+                            <option value="">-- Chọn nhạc sĩ --</option>
+                        </select>
+                        <span asp-validation-for="ComposerId" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="ReleaseDate" class="form-label fw-bold">Ngày phát hành (*)</label>
+                        <input asp-for="ReleaseDate" class="form-control" type="date" />
+                        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="ImageFile" class="form-label fw-bold">Tải ảnh bìa lên Cloudinary</label>
+                        <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Mp3Link" class="form-label fw-bold">Đường dẫn file nhạc MP3</label>
+                    <input asp-for="Mp3Link" class="form-control" placeholder="Dán đường dẫn tệp âm thanh trực tuyến..." />
+                    <span asp-validation-for="Mp3Link" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Lyrics" class="form-label fw-bold">Lời bài hát hoặc chi tiết</label>
+                    <textarea asp-for="Lyrics" id="lyricsEditor" class="form-control" rows="6"></textarea>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-success px-5 fw-bold">Lưu bài hát</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
+    <script>
+        // Kích hoạt CKEditor thay thế phần textarea thông thường
+        ClassicEditor
+            .create(document.querySelector('#lyricsEditor'))
+            .catch(error => { console.error(error); });
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

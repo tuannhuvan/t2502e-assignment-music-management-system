@@ -1,0 +1,53 @@
+﻿@model Music_Management_System.Models.Song
+@{
+    ViewData["Title"] = "Chi Tiết: " + Model.Title;
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0 overflow-hidden">
+        <div class="row g-0">
+            <div class="col-md-4 bg-dark d-flex align-items-center justify-content-center p-4">
+                <img src="@Model.ThumbnailUrl" class="img-fluid rounded shadow border border-secondary object-fit-cover w-100" style="max-height: 350px;" alt="Cover" />
+            </div>
+            
+            <div class="col-md-8">
+                <div class="card-body p-4">
+                    <h1 class="text-primary fw-bold mb-1">@Model.Title</h1>
+                    <p class="text-muted small mb-4">Ngày phát hành: @Model.ReleaseDate.ToString("dd/MM/yyyy")</p>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <div class="p-3 bg-light rounded border-start border-4 border-info shadow-sm">
+                                <h6 class="text-muted mb-1">🎙️ Nghệ sĩ thể hiện</h6>
+                                <span class="fw-bold fs-5 text-dark">@Model.Singer.Name</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3 bg-light rounded border-start border-4 border-secondary shadow-sm">
+                                <h6 class="text-muted mb-1">🎼 Nhạc sĩ sáng tác</h6>
+                                <span class="fw-bold fs-5 text-dark">@Model.Composer.Name</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 bg-light p-3 rounded border">
+                        <h6 class="fw-bold text-success mb-2">🔊 Trình nghe nhạc trực tiếp:</h6>
+                        <audio controls class="w-100">
+                            <source src="@Model.Mp3Link" type="audio/mpeg">
+                            Trình duyệt không hỗ trợ.
+                        </audio>
+                    </div>
+
+                    <h5 class="fw-bold border-bottom pb-2 text-dark">📜 Lời bài hát (Lyrics)</h5>
+                    <div class="bg-light p-3 rounded shadow-inner" style="max-height: 400px; overflow-y: auto;">
+                        @Html.Raw(Model.Lyrics)
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <a asp-action="Index" class="btn btn-primary px-4 fw-bold">Quay lại danh sách</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,141 @@
+﻿@model IEnumerable<Music_Management_System.Models.Song>
+@{
+    ViewData["Title"] = "Quản Lý Âm Nhạc";
+    int currentPage = (int)ViewData["CurrentPage"];
+    int totalPages = (int)ViewData["TotalPages"];
+    string currentSearch = ViewData["CurrentSearch"]?.ToString();
+}
+
+<div class="container mt-4 shadow p-4 bg-white rounded">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary fw-bold">🎵 Music Management System</h2>
+        <a asp-action="Create" class="btn btn-success fw-bold">+ Thêm Bài Hát Mới</a>
+    </div>
+    <hr />
+
+    <form asp-action="Index" method="get" class="row g-2 mb-4">
+        <div class="col-md-8">
+            <input type="text" name="searchString" value="@currentSearch" class="form-control" placeholder="Tìm kiếm bài hát theo tiêu đề..." />
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+            <button type="submit" class="btn btn-primary px-4">Tìm kiếm</button>
+            @if (!string.IsNullOrEmpty(currentSearch))
+            {
+                <a asp-action="Index" class="btn btn-outline-secondary">Xóa bộ lọc</a>
+            }
+        </div>
+    </form>
+
+    <div class="card mb-4 border-primary bg-light shadow-sm animate-fade-in">
+        <div class="card-body d-flex align-items-center justify-content-between py-2">
+            <div>
+                <span class="badge bg-primary me-2">NOW PLAYING</span>
+                <strong id="playingTitle" class="text-dark">Chưa chọn bài hát</strong>
+            </div>
+            <audio id="globalAudioPlayer" controls class="w-50">
+                <source id="audioSource" src="" type="audio/mpeg">
+                Trình duyệt của bạn không hỗ trợ.
+            </audio>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-dark">
+                <tr class="text-center">
+                    <th style="width: 80px;">Ảnh bìa</th>
+                    <th>Tiêu đề</th>
+                    <th>Ca sĩ</th>
+                    <th>Nhạc sĩ</th>
+                    <th>Ngày phát hành</th>
+                    <th style="width: 220px;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Không tìm thấy bài hát nào phù hợp!</td>
+                    </tr>
+                }
+                @foreach (var item in Model)
+                {
+                    <tr id="song-row-@item.Id">
+                        <td class="text-center">
+                            <img src="@item.ThumbnailUrl" width="55" height="55" class="rounded shadow-sm object-fit-cover" alt="Cover" />
+                        </td>
+                        <td><span class="fw-bold text-dark">@item.Title</span></td>
+                        <td><span class="badge bg-info text-dark">@item.Singer.Name</span></td>
+                        <td><span class="badge bg-secondary">@item.Composer.Name</span></td>
+                        <td class="text-center">@item.ReleaseDate.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary fw-bold" onclick="playSong('@item.Title', '@item.Mp3Link')">▶ Play</button>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-warning text-white mx-1">Chi tiết</a>
+                            <button class="btn btn-sm btn-danger" onclick="confirmDelete(@item.Id, '@item.Title')">Xóa</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(currentPage - 1)" asp-route-searchString="@currentSearch">Previous</a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i" asp-route-searchString="@currentSearch">@i</a>
+                    </li>
+                }
+                <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(currentPage + 1)" asp-route-searchString="@currentSearch">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Hàm xử lý nạp link nhạc và tự động phát bài hát
+        function playSong(title, mp3Url) {
+            document.getElementById('playingTitle').innerText = title;
+            const player = document.getElementById('globalAudioPlayer');
+            const source = document.getElementById('audioSource');
+            
+            source.src = mp3Url;
+            player.load(); // Buộc trình phát nạp lại luồng dữ liệu mới
+            player.play(); // Phát nhạc
+        }
+
+        // Hàm xử lý Xóa mềm bằng AJAX Fetch API không reload trang (Yêu cầu 3.4)
+        function confirmDelete(id, title) {
+            if (confirm(`Bạn có chắc chắn muốn xóa bài hát "${title}" này không?`)) {
+                fetch(`/Songs/SoftDelete/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Hiệu ứng ẩn và xóa trực tiếp dòng HTML trên bảng
+                        const row = document.getElementById(`song-row-${id}`);
+                        row.style.transition = "all 0.5s ease";
+                        row.style.opacity = 0;
+                        setTimeout(() => row.remove(), 500);
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+}
