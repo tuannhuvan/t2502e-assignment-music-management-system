@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Music_Management_System.Models;
 
@@ -12,6 +13,10 @@ public class Singer
     public string Name { get; set; }
     public string? Biography { get; set; }
     public string? ImageUrl { get; set; }
+    
+    // [NotMapped]
+    // [Display(Name = "Tải ảnh đại diện")]
+    // public IFormFile? ImageFile { get; set; } // Nhận file từ ViewForm
     
     // Navigation Property: Quan he 1 ca si co nhieu bai hat
     public ICollection<Song> Songs { get; set; } = new List<Song>();

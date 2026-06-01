@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Music_Management_System.Data;
+using Music_Management_System.Helpers;
+using Music_Management_System.Interfaces;
+using Music_Management_System.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,11 @@ builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+// Cấu hình Cloudinary Service
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+
 
 var app = builder.Build();
 
